@@ -1,5 +1,7 @@
 import telebot
+from telebot import types
 bot = telebot.TeleBot('your token')
+
 
 @bot.message_handler(content_types=['text'])
 def get_text_message(message):
@@ -51,3 +53,10 @@ def get_age(message):
         question = f'Тебе {str(age)} лет, тебя зовут {name} {surname}?'
         bot.send_message(message.from_user.id, text=question, reply_markup=keyboard)
 
+@bot.callback_query_handler(func=lambda call: True)
+def callback_worker(call):
+    if call.data == "yes": #call.data это callback_data, которую мы указали при объявлении кнопки
+        #код сохранения данных, или их обработки
+        bot.send_message(call.message.chat.id, 'Запомню : )')
+    elif call.data == "no":
+        bot.send_message(call.message.chat.id, 'Ну и нахуй иди')
